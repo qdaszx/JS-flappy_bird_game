@@ -98,7 +98,7 @@ let pipe = {
   pipeCount: 0
 };
 
-function movePipes() {
+function movePipes(bird, score) {
   let pipes = document.querySelectorAll(".pipe");
   let counter = 0;
   pipes.forEach(function (item) {
@@ -108,19 +108,40 @@ function movePipes() {
       item.parentElement.removeChild(item);
       counter++;
     }
+    // 충돌 여부
+    if (isCollide(item, bird)) {
+      playGameOver(bird, score);
+    }
   });
+
   for (let i = 0; i < counter / 2; i++) {
     makePipe(0);
   }
+}
+
+function isCollide(pipe, bird) {
+  // getBoundingClientRect 좌표 나오는 함수
+  let pipeRect = pipe.getBoundingClientRect();
+  let birdRect = bird.getBoundingClientRect();
+  return (
+    pipeRect.bottom > birdRect.top &&
+    pipeRect.top < birdRect.bottom &&
+    pipeRect.left < birdRect.right &&
+    pipeRect.right > birdRect.left
+  );
 }
 
 // 애니메이션 구현 함수
 function playGame() {
   // 인플레이 true (게임 진행 중)
   if (player.inplay) {
-    movePipes();
     let bird = document.querySelector(".bird");
     let wing = document.querySelector(".wing");
+    // 스코어
+    player.score++;
+    score.innerText = "SCORE : " + player.score;
+
+    movePipes(bird, player.score);
     // 날개짓 불린값
     let move = true;
     // 이동시 해당 x, y 계산
@@ -149,28 +170,28 @@ function playGame() {
       wing.pos = wing.pos === 15 ? 25 : 15;
       wing.style.top = wing.pos + "px";
     }
-
+    // 중력 크기
     player.y += player.speed * 2;
-    // 게임 종료
-    if (player.y > gameArea.offsetHeight) {
-      playGameOver();
-    }
 
     bird.style.left = player.x + "px";
     bird.style.top = player.y + "px";
+
+    // 게임 종료
+    if (player.y > gameArea.offsetHeight) {
+      playGameOver(bird, player.score);
+    }
+
     window.requestAnimationFrame(playGame);
-    // 스코어
-    player.score++;
-    score.innerText = "SCORE : " + player.score;
   }
 }
 
 // 게임 종료 함수
-function playGameOver() {
+function playGameOver(bird, score) {
   player.inplay = false;
   gameMessage.classList.remove("hide");
   gameMessage.innerHTML =
     "GAME OVER<br/>당신의 점수는 " +
-    player.score +
+    score +
     "점 입니다. <br/> 다시 시작하려면 여기를 누르세요";
+  bird.setAttribute("style", "transform:rotate(180deg)");
 }
