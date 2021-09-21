@@ -52,16 +52,16 @@ let player = {
 
 // 애니메이션 구현 함수
 function playGame() {
-  if (keys.ArrowLeft) {
+  if (keys.ArrowLeft && player.x > 0) {
     player.x -= player.speed;
   }
-  if (keys.ArrowRight) {
+  if (keys.ArrowRight && player.x < gameArea.offsetWidth - bird.offsetWidth) {
     player.x += player.speed;
   }
-  if (keys.ArrowUp) {
+  if (keys.ArrowUp && player.y > 0) {
     player.y -= player.speed;
   }
-  if (keys.ArrowDown) {
+  if (keys.ArrowDown && player.y < gameArea.offsetHeight - bird.offsetHeight) {
     player.y += player.speed;
   }
   bird.style.left = player.x + "px";
