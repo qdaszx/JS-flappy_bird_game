@@ -50,7 +50,8 @@ let wing = document.createElement("div");
 let player = {
   x: 0,
   y: 0,
-  speed: 2
+  speed: 2,
+  score: 0
 };
 
 // 애니메이션 구현 함수
@@ -85,4 +86,7 @@ function playGame() {
   bird.style.left = player.x + "px";
   bird.style.top = player.y + "px";
   window.requestAnimationFrame(playGame);
+  // 스코어
+  player.score++;
+  score.innerText = "SCORE : " + player.score;
 }
