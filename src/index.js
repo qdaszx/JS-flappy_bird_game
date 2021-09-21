@@ -17,6 +17,9 @@ function start() {
   wing.setAttribute("class", "wing");
   bird.appendChild(wing);
   gameArea.appendChild(bird);
+  // 날개짓
+  wing.pos = 15;
+  wing.style.top = wing.pos + "px";
   // 움직임 처리 함수
   player.x = bird.offsetLeft;
   player.y = bird.offsetTop;
@@ -52,18 +55,31 @@ let player = {
 
 // 애니메이션 구현 함수
 function playGame() {
+  // 날개짓 불린값
+  let move = true;
+  // 이동시 해당 x, y 계산
   if (keys.ArrowLeft && player.x > 0) {
     player.x -= player.speed;
+    move = true;
   }
   if (keys.ArrowRight && player.x < gameArea.offsetWidth - bird.offsetWidth) {
     player.x += player.speed;
+    move = true;
   }
   if (keys.ArrowUp && player.y > 0) {
     player.y -= player.speed;
+    move = true;
   }
   if (keys.ArrowDown && player.y < gameArea.offsetHeight - bird.offsetHeight) {
     player.y += player.speed;
+    move = true;
   }
+
+  if (move) {
+    wing.pos = wing.pos === 15 ? 25 : 15;
+    wing.style.top = wing.pos + "px";
+  }
+
   bird.style.left = player.x + "px";
   bird.style.top = player.y + "px";
   window.requestAnimationFrame(playGame);
